@@ -6,20 +6,28 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->post('/graphql', [App\Controller\GraphQL::class, 'handle']);
 });
 
-$routeInfo = $dispatcher->dispatch(
-    $_SERVER['REQUEST_METHOD'],
-    $_SERVER['REQUEST_URI']
-);
+
+$httpMethod = $_SERVER['REQUEST_METHOD'];
+$uri = $_SERVER['REQUEST_URI'];
+
+// Adjust URI for the subdirectory
+$uri = str_replace('/fullstack-test-starter', '', $uri);
+
+$routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 
 switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::NOT_FOUND:
         // ... 404 Not Found
+        echo $_SERVER['REQUEST_METHOD'];
+        echo "Not found!!";
         break;
     case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
         $allowedMethods = $routeInfo[1];
+        echo "Not allowed";
         // ... 405 Method Not Allowed
         break;
     case FastRoute\Dispatcher::FOUND:
+        echo "FOound";
         $handler = $routeInfo[1];
         $vars = $routeInfo[2];
         echo $handler($vars);
