@@ -112,6 +112,9 @@ class GraphQL {
                     ],
                     'products' => [
                         'type' => Type::listOf($productType),
+                        'args' => [
+                            'category' => ['type' => Type::string()],
+                        ],
                         'resolve' => [self::class, 'getProducts'],
                     ],
                     'product' => [
@@ -175,8 +178,13 @@ class GraphQL {
         return self::$categoryService->getCategories();
     }
 
-    public static function getProducts() {
-
+    public static function getProducts($rootValue, $args) {
+        $category = $args['category'] ?? null;
+        
+        if ($category) {
+            return self::$productService->getProductsByCategory($category);
+        }
+    
         return self::$productService->getAllProducts();
     }
 
@@ -184,4 +192,6 @@ class GraphQL {
 
         return self::$productService->getProductById($args['id']);
     }
+
+
 }

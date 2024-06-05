@@ -40,7 +40,7 @@ class ProductService {
         return $productObj->getDetails();
     }
 
-    public function getProductByCategory($category) {
+    public function getProductsByCategory($category) {
         $productsData = $this->productRepository->fetchByCategory($category);
         $products = ParseProduct::convertInStockToBool($productsData);
         return $products;
