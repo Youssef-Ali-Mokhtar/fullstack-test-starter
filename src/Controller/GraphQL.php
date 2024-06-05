@@ -1,10 +1,13 @@
 <?php
 
+
 namespace MyApp\Controller;
 
 use MyApp\database\Database;
 use MyApp\repositories\ProductRepository;
+use MyApp\repositories\CategoryRepository;
 use MyApp\services\ProductService;
+use MyApp\services\CategoryService;
 
 use GraphQL\GraphQL as GraphQLBase;
 use GraphQL\Type\Definition\ObjectType;
@@ -19,15 +22,21 @@ class GraphQL {
 
     private static $database;
     private static $db;
+    private static $categoryRepository;
     private static $productRepository;
+    private static $categoryService;
     private static $productService;
 
     static public function handle() {
 
         self::$database = new Database();
         self::$db = self::$database->connect();
+
         self::$productRepository = new ProductRepository(self::$db);
         self::$productService = new ProductService(self::$productRepository);
+
+        self::$categoryRepository = new CategoryRepository(self::$db);
+        self::$categoryService = new CategoryService(self::$categoryRepository);
 
         try {
             $currencyType = new ObjectType([
@@ -163,7 +172,7 @@ class GraphQL {
 
     public static function getCategories() {
         
-        return [['name'=>'All'], ['name'=>'Clothes'], ['name'=>'Tech']];
+        return self::$categoryService->getCategories();
     }
 
     public static function getProducts() {
