@@ -188,7 +188,7 @@ class GraphQL {
         return self::$productService->getAllProducts();
     }
 
-    public static function getProductById($rootValue, $args) {
+    public static function getProductById($rootValue, $args, $context, $info) {
 
         return self::$productService->getProductById($args['id']);
     }
