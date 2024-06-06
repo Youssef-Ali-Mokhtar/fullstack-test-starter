@@ -35,7 +35,7 @@ class ProductService {
 
     public function getProductsByCategory($category) {
         $productsData = $this->productRepository->fetchByCategory($category);
-        $products = self::formatProduct($data);
+        $products = self::formatProducts($productsData);
         return $products;
     }
 
