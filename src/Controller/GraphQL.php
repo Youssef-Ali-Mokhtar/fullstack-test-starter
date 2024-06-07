@@ -102,7 +102,7 @@ class GraphQL {
                     'echo' => [
                         'type' => Type::string(),
                         'args' => [
-                            'message' => ['type' => Type::string()],
+                            'message' => Type::string(),
                         ],
                         'resolve' => static fn ($rootValue, array $args): string => $rootValue['prefix'] . $args['message'],
                     ],
@@ -113,7 +113,8 @@ class GraphQL {
                     'products' => [
                         'type' => Type::listOf($productType),
                         'args' => [
-                            'category' => ['type' => Type::string()],
+                            'category' => Type::string(),
+                            'galleryLimit' => Type::int(),
                         ],
                         'resolve' => [self::class, 'getProducts'],
                     ],
@@ -121,6 +122,7 @@ class GraphQL {
                         'type' => $productType,
                         'args' => [
                             'id' => Type::nonNull(Type::id()),
+                            'galleryLimit' => Type::int(),
                         ],
                         'resolve' => [self::class, 'getProductById'],
                     ],
@@ -180,17 +182,20 @@ class GraphQL {
 
     public static function getProducts($rootValue, $args) {
         $category = $args['category'] ?? null;
+        $galleryLimit = $args['galleryLimit'] ?? null;
         
         if ($category) {
-            return self::$productService->getProductsByCategory($category);
+            return self::$productService->getProductsByCategory($category, $galleryLimit);
         }
     
-        return self::$productService->getAllProducts();
+        return self::$productService->getAllProducts($galleryLimit);
     }
 
     public static function getProductById($rootValue, $args, $context, $info) {
+        $id = $args['id'] ?? null;
+        $galleryLimit = $args['galleryLimit'] ?? null;
 
-        return self::$productService->getProductById($args['id']);
+        return self::$productService->getProductById($id, $galleryLimit);
     }
 
 

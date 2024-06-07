@@ -4,14 +4,18 @@
 
     class ParseProduct {
 
-        static function convertInStockToBool($products) {
-
-            $transformedData = array_map(function($product) {
-                $product['inStock'] = (bool) $product['inStock'];
-                return $product;
-            }, $products);
-
-            return $transformedData;
+        public static function aggregateData($data) {
+            $organizedData = [];
+    
+            foreach ($data as $row) {
+                $id = $row['productId'];
+                if (!isset($organizedData[$id])) {
+                    $organizedData[$id] = [];
+                }
+                $organizedData[$id][] = $row;
+            }
+    
+            return $organizedData;
         }
 
         static function extractProduct($data) {
@@ -30,7 +34,8 @@
             $attributes = [];
 
             
-
+            if(!$data[0]['attributeId']) return $attributes;
+            
             foreach ($data as $item) {
                 $attributeId = $item['attributeId'];
                 

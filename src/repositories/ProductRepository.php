@@ -30,6 +30,55 @@ class ProductRepository {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
+
+    public function fetchGallery($productIds = [], $limit = NULL) {
+        // Base query with ROW_NUMBER() for limiting rows per productId
+        $query = "
+            SELECT productId, url
+            FROM (
+                SELECT productId, url, ROW_NUMBER() OVER (PARTITION BY productId ORDER BY id) AS row_num
+                FROM gallery
+            ) AS numbered_rows
+        ";
+        
+        // Add a WHERE clause if product IDs are provided
+        if (!empty($productIds)) {
+            // Create placeholders for the product IDs
+            $placeholders = implode(',', array_fill(0, count($productIds), '?'));
+            $query .= " WHERE productId IN ($placeholders)";
+        }
+        
+        // Add the row_num limit if provided
+        if ($limit !== NULL) {
+            $query .= !empty($productIds) ? " AND" : " WHERE";
+            $query .= " row_num <= ?";
+        }
+        
+        // Prepare the statement
+        $stmt = $this->conn->prepare($query);
+        
+        // Bind values to placeholders
+        $paramIndex = 1;
+        if (!empty($productIds)) {
+            foreach ($productIds as $id) {
+                $stmt->bindValue($paramIndex++, $id, PDO::PARAM_STR); // Assuming productId is VARCHAR
+            }
+        }
+        
+        // Bind the limit value if provided
+        if ($limit !== NULL) {
+            $stmt->bindValue($paramIndex, $limit, PDO::PARAM_INT);
+        }
+        
+        // Execute the query
+        $stmt->execute();
+        
+        // Fetch and return all results
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+
 
     //One query, get product by id, join with attribute table
     public function fetchById($id) {
