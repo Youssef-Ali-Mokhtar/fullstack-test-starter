@@ -8,6 +8,7 @@ abstract class Product {
     protected $inStock;
     protected $brand;
     protected $category;
+    protected $gallery;
     protected $attributes;
 
     public function __construct($data) {
@@ -16,6 +17,7 @@ abstract class Product {
         $this->inStock = $data['inStock'];
         $this->brand = $data['brand'];
         $this->category = $data['category'];
+        $this->gallery = $data['gallery'];
         $this->attributes = [];
     }
 
@@ -29,6 +31,7 @@ abstract class Product {
             'inStock' => $this->inStock,
             'brand' => $this->brand,
             'category' => $this->category,
+            'gallery' => $this->gallery,
             'attributes' => $this->attributes
         ];
     }

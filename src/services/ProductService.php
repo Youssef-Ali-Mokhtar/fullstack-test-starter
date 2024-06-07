@@ -9,74 +9,99 @@ use MyApp\helper\ParseProduct;
 use MyApp\factories\ProductFactory;
 
 class ProductService {
+
     private $productRepository;
 
     public function __construct($productRepository) {
         $this->productRepository = $productRepository;
     }
 
-    //One query, only Product table, no join with attribute
-    public function getAllProducts() {
+    //Get all products
+    public function getAllProducts($galleryLimit = NULL) {
+
+        //Fetch products joined with attributes (without gallery)
         $productsData = $this->productRepository->fetchAll();
-        $products = self::formatProducts($productsData);
+
+        $products = $this->transformProducts($productsData, $galleryLimit);
+
         return $products;
     }
 
-    //GET ONE PRODUCT BY ID IN ONE QUERY
-    public function getProductById($id) {
-        $data = $this->productRepository->fetchById($id);
-        if (!$data) {
+    //Get one product by id
+    public function getProductById($id, $galleryLimit=NULL) {
+        $productsData = $this->productRepository->fetchById($id);
+        if (!$productsData) {
             throw new Exception("Product not found");
         }
-        $product = self::formatProduct($data);
-        return $product;
+
+        [$products] = $this->transformProducts($productsData, $galleryLimit);
+
+        return $products;
     }
 
-
-    public function getProductsByCategory($category) {
+    //Get products by category
+    public function getProductsByCategory($category, $galleryLimit = NULL) {
         $productsData = $this->productRepository->fetchByCategory($category);
-        $products = self::formatProducts($productsData);
+
+        $products = $this->transformProducts($productsData, $galleryLimit);
+
         return $products;
     }
 
 
 
 
+    public function processProduct($product, $key, $gallery) {
+        $extractedProduct = ParseProduct::extractProduct($product); //Extract product without attributes data
+        $extractedProduct['gallery'] = $gallery[$key];  //Attach gallery associated with its product
 
+        $productObj = ProductFactory::createProduct($extractedProduct); //Create product object using factory pattern to process the product data
 
-    public static function formatProduct($data) {
-        $extractedProduct = ParseProduct::extractProduct($data); //EXTRACT PRODUCT 
-        $extractedAttributes = ParseProduct::extractAttributes($data); //EXTRACT ATTRIBUTES
-        $productObj = ProductFactory::createProduct($extractedProduct); //FACTORY PATTERN FOR PRODUCT
+        $extractedAttributes = ParseProduct::extractAttributes($product); //Extract attributes without product data
 
-        $productObj->setAttributesSet($extractedAttributes); //LEVERAGING POLYMORPHISM TO SET ATTRIBUTES
+        $productObj->setAttributesSet($extractedAttributes); //Leverage polymorphism to assign attributes data to its product
 
-        return $productObj->getDetails();
+        return $productObj->getDetails(); //Extract data from product object
     }
 
-    public static function formatProducts($data) {
-        $organizedData = [];
 
-        foreach ($data as $row) {
-            $id = $row['productId'];
-            if (!isset($organizedData[$id])) {
-                $organizedData[$id] = [];
-            }
-            $organizedData[$id][] = $row;
+
+    //Transforms duplicated product data from SQL fetched data into data that matches the required schema
+    public function transformProducts($productsData, $galleryLimit = NULL) {
+        //Assign product rows to it's associated product id
+        $aggregateProducts = ParseProduct::aggregateData($productsData);
+
+        //Extract product ids to fetch gallery data
+        $productIds = [];
+        foreach($aggregateProducts as $key=>$value) {
+            $productIds[] = $key;
         }
-    
-        // Reset the keys to be numerical
+        
+        //Fetch gallery pictures for products
+        $galleryData = $this->productRepository->fetchGallery(productIds:$productIds, limit:$galleryLimit);
+        
+        //Assign gallery rows to its associated product id
+        $aggregatedGallery = ParseProduct::aggregateData($galleryData);
 
-        $numOrganizedData = array_values($organizedData);
-
+        //Extract url string from gallery data
+        $galleryMatched = [];
+        foreach($aggregatedGallery as $key=>$value) {
+            $galleryMatched[$key] = array_map(function($g){
+                return $g["url"];
+            },$value);
+        }
+        
+        //For each product inside transformProduct function, we attach gallery to product
+        //Then leverage polymorphism for each product
         $products = [];
-
-        foreach($numOrganizedData as $p) {
-            $products[] = self::formatProduct($p);
+        foreach($aggregateProducts as $key => $value) {
+            
+            $products[] = $this->processProduct($value, $key, $galleryMatched);
         }
 
         return $products;
     }
+
 
 }
 ?>
