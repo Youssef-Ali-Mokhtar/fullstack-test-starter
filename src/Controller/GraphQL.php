@@ -16,140 +16,19 @@ use GraphQL\Type\Schema;
 use GraphQL\Type\SchemaConfig;
 use RuntimeException;
 use Throwable;
-
+use MyApp\GraphQL\Schema\Schema as MySchema;
 
 class GraphQL {
 
-    private static $database;
-    private static $db;
-    private static $categoryRepository;
-    private static $productRepository;
-    private static $categoryService;
-    private static $productService;
+
+    // See docs on schema options:
+    // https://webonyx.github.io/graphql-php/schema-definition/#configuration-options
 
     static public function handle() {
 
-        self::$database = new Database();
-        self::$db = self::$database->connect();
-
-        self::$productRepository = new ProductRepository(self::$db);
-        self::$productService = new ProductService(self::$productRepository);
-
-        self::$categoryRepository = new CategoryRepository(self::$db);
-        self::$categoryService = new CategoryService(self::$categoryRepository);
-
         try {
-            $currencyType = new ObjectType([
-                'name' => 'Currency',
-                'fields' => [
-                    'label' => Type::string(),
-                    'symbol' => Type::string(),
-                ]
-            ]);
             
-            $priceType = new ObjectType([
-                'name' => 'Price',
-                'fields' => [
-                    'amount' => Type::float(),
-                    'currency' => $currencyType,
-                ]
-            ]);
-            
-            $attributeType = new ObjectType([
-                'name' => 'Attribute',
-                'fields' => [
-                    'id' => Type::id(),
-                    'displayValue' => Type::string(),
-                    'value' => Type::string(),
-                ]
-            ]);
-            
-            $attributeSetType = new ObjectType([
-                'name' => 'AttributeSet',
-                'fields' => [
-                    'id' => Type::id(),
-                    'name' => Type::string(),
-                    'type' => Type::string(),
-                    'items' => Type::listOf($attributeType),
-                ]
-            ]);
-            
-            $productType = new ObjectType([
-                'name' => 'Product',
-                'fields' => [
-                    'id' => Type::id(),
-                    'name' => Type::string(),
-                    'inStock' => Type::boolean(),
-                    'gallery' => Type::listOf(Type::string()),
-                    'description' => Type::string(),
-                    'category' => Type::string(),
-                    'attributes' => Type::listOf($attributeSetType),
-                    'prices' => Type::listOf($priceType),
-                    'brand' => Type::string(),
-                ]
-            ]);
-            
-            $categoryType = new ObjectType([
-                'name' => 'Category',
-                'fields' => [
-                    'name' => Type::string(),
-                ]
-            ]);
-            
-            $queryType = new ObjectType([
-                'name' => 'Query',
-                'fields' => [
-                    'echo' => [
-                        'type' => Type::string(),
-                        'args' => [
-                            'message' => Type::string(),
-                        ],
-                        'resolve' => static fn ($rootValue, array $args): string => $rootValue['prefix'] . $args['message'],
-                    ],
-                    'categories' => [
-                        'type' => Type::listOf($categoryType),
-                        'resolve' => [self::class, 'getCategories'],
-                    ],
-                    'products' => [
-                        'type' => Type::listOf($productType),
-                        'args' => [
-                            'category' => Type::string(),
-                            'galleryLimit' => Type::int(),
-                        ],
-                        'resolve' => [self::class, 'getProducts'],
-                    ],
-                    'product' => [
-                        'type' => $productType,
-                        'args' => [
-                            'id' => Type::nonNull(Type::id()),
-                            'galleryLimit' => Type::int(),
-                        ],
-                        'resolve' => [self::class, 'getProductById'],
-                    ],
-                ]
-            ]);
-        
-            $mutationType = new ObjectType([
-                'name' => 'Mutation',
-                'fields' => [
-                    'sum' => [
-                        'type' => Type::int(),
-                        'args' => [
-                            'x' => ['type' => Type::int()],
-                            'y' => ['type' => Type::int()],
-                        ],
-                        'resolve' => static fn ($calc, array $args): int => $args['x'] + $args['y'],
-                    ],
-                ],
-            ]);
-        
-            // See docs on schema options:
-            // https://webonyx.github.io/graphql-php/schema-definition/#configuration-options
-            $schema = new Schema(
-                (new SchemaConfig())
-                ->setQuery($queryType)
-                ->setMutation($mutationType)
-            );
+            $schema = MySchema::create();
         
             $rawInput = file_get_contents('php://input');
             if ($rawInput === false) {
@@ -163,6 +42,7 @@ class GraphQL {
             $rootValue = ['prefix' => 'You said: '];
             $result = GraphQLBase::executeQuery($schema, $query, $rootValue, null, $variableValues);
             $output = $result->toArray();
+
         } catch (Throwable $e) {
             $output = [
                 'error' => [
