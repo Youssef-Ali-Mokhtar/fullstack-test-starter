@@ -23,6 +23,7 @@
                 'id' => $data[0]['productId'],
                 'name' => $data[0]['productName'],
                 'inStock' => (bool)$data[0]['inStock'],
+                'description' => $data[0]['description'],
                 'category' => $data[0]['category'],
                 'brand' => $data[0]['brand'],
             ];
