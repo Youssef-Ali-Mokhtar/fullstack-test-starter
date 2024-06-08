@@ -18,7 +18,6 @@ class ProductService {
 
     //Get all products
     public function getAllProducts($galleryLimit = NULL) {
-
         //Fetch products joined with attributes (without gallery)
         $productsData = $this->productRepository->fetchAll();
 
@@ -27,7 +26,7 @@ class ProductService {
         return $products;
     }
 
-    //Get one product by id
+    //Get product by id
     public function getProductById($id, $galleryLimit=NULL) {
         $productsData = $this->productRepository->fetchById($id);
         if (!$productsData) {
@@ -51,22 +50,17 @@ class ProductService {
 
 
 
-    public function processProduct($product, $key, $gallery) {
-        $extractedProduct = ParseProduct::extractProduct($product); //Extract product without attributes data
-        $extractedProduct['gallery'] = $gallery[$key];  //Attach gallery associated with its product
+    //Create product object and apply POLYMORPHISM
+    public function processProduct($extractedProduct, $extractedAttributes) {
 
-        $productObj = ProductFactory::createProduct($extractedProduct); //Create product object using factory pattern to process the product data
-
-        $extractedAttributes = ParseProduct::extractAttributes($product); //Extract attributes without product data
+        $productObj = ProductFactory::createProduct($extractedProduct); //Create product object using factory pattern
 
         $productObj->setAttributesSet($extractedAttributes); //Leverage polymorphism to assign attributes data to its product
 
         return $productObj->getDetails(); //Extract data from product object
     }
 
-
-
-    //Transforms duplicated product data from SQL fetched data into data that matches the required schema
+    //Transforms duplicated SQL raw data into a format that matches the required schema
     public function transformProducts($productsData, $galleryLimit = NULL) {
         //Assign product rows to it's associated product id
         $aggregateProducts = ParseProduct::aggregateData($productsData);
@@ -95,8 +89,11 @@ class ProductService {
         //Then leverage polymorphism for each product
         $products = [];
         foreach($aggregateProducts as $key => $value) {
-            
-            $products[] = $this->processProduct($value, $key, $galleryMatched);
+            $extractedProduct = ParseProduct::extractProduct($value); //Extract product without attributes data
+            $extractedProduct['gallery'] = $galleryMatched[$key];  //Attach gallery associated with its product
+            $extractedAttributes = ParseProduct::extractAttributes($value); //Extract attributes without product data
+
+            $products[] = $this->processProduct($extractedProduct, $extractedAttributes);
         }
 
         return $products;

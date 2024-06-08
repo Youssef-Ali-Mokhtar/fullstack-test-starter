@@ -37,13 +37,6 @@ class QueryResolver {
         return new ObjectType([
             'name' => 'Query',
             'fields' => [
-                'echo' => [
-                    'type' => Type::string(),
-                    'args' => [
-                        'message' => Type::string(),
-                    ],
-                    'resolve' => static fn ($rootValue, array $args): string => $rootValue['prefix'] . $args['message'],
-                ],
                 'categories' => [
                     'type' => Type::listOf(new CategoryType()),
                     'resolve' => [self::class, 'getCategories'],

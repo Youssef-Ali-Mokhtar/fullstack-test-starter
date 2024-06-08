@@ -18,7 +18,6 @@ $routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 switch ($routeInfo[0]) {
     case FastRoute\Dispatcher::NOT_FOUND:
         // ... 404 Not Found
-        echo $_SERVER['REQUEST_METHOD'];
         echo "Not found!!";
         break;
     case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
@@ -27,7 +26,6 @@ switch ($routeInfo[0]) {
         // ... 405 Method Not Allowed
         break;
     case FastRoute\Dispatcher::FOUND:
-        echo "FOound";
         $handler = $routeInfo[1];
         $vars = $routeInfo[2];
         echo $handler($vars);

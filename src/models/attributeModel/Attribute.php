@@ -1,8 +1,9 @@
 <?php
 
 namespace MyApp\models\attributeModel;
+use MyApp\models\ModelInterface;
 
-abstract class Attribute {
+abstract class Attribute implements ModelInterface {
     protected $id;
     protected $name;
     protected $type;

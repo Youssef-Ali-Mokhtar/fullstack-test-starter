@@ -11,7 +11,8 @@ class ProductRepository {
         $this->conn = $db;
     }
 
-    //One query, only Product table, no join with attribute
+    //Fetch all products joined with attributes and items (or options)
+    //But without gallery, because it would cause a lot of unnecessary data duplication
     public function fetchAll() {
         $query = "
         SELECT p.id AS productId, p.name AS productName, p.inStock, p.category, 
@@ -31,11 +32,12 @@ class ProductRepository {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-
+    //Fetch all gallery data
+    //If product ids are provided, it will fetch only gallery associated with the required products
+    //If limit is provided, it will fetch at most the given limit number for each product
     public function fetchGallery($productIds = [], $limit = NULL) {
         // Base query with ROW_NUMBER() for limiting rows per productId
-        $query = "
-            SELECT productId, url
+        $query = "SELECT productId, url
             FROM (
                 SELECT productId, url, ROW_NUMBER() OVER (PARTITION BY productId ORDER BY id) AS row_num
                 FROM gallery
@@ -71,19 +73,16 @@ class ProductRepository {
             $stmt->bindValue($paramIndex, $limit, PDO::PARAM_INT);
         }
         
-        // Execute the query
         $stmt->execute();
-        
-        // Fetch and return all results
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
 
 
-    //One query, get product by id, join with attribute table
+    //Get product by id joined with attributes and items (or options)
     public function fetchById($id) {
-        $query = "
-        SELECT p.id AS productId, p.name AS productName, p.inStock, p.category, 
+        $query = "SELECT p.id AS productId, p.name AS productName, p.inStock, p.category, 
                 p.brand, a.id AS attributeId, a.name AS attributeName, a.type, i.id AS itemId, 
                 i.value, i.displayValue
         FROM product AS p
@@ -101,9 +100,10 @@ class ProductRepository {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
+    //Get products by category
     public function fetchByCategory($category) {
-        $query = "
-        SELECT p.id AS productId, p.name AS productName, p.inStock, p.category, 
+        $query = "SELECT p.id AS productId, p.name AS productName, p.inStock, p.category, 
                 p.brand, a.id AS attributeId, a.name AS attributeName, a.type, i.id AS itemId, 
                 i.value, i.displayValue
         FROM product AS p

@@ -1,8 +1,9 @@
 <?php
 
 namespace MyApp\models\productModel;
+use MyApp\models\ModelInterface;
 
-abstract class Product {
+abstract class Product implements ModelInterface {
     protected $id; 
     protected $name; 
     protected $inStock;
@@ -23,7 +24,7 @@ abstract class Product {
 
     abstract protected function setAttributesSet(array $attributesData);
 
-    public function getDetails(): array {
+    public function getDetails() {
 
         return [
             'id' => $this->id,
