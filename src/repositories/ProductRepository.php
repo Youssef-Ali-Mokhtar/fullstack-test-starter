@@ -15,7 +15,7 @@ class ProductRepository {
     //But without gallery, because it would cause a lot of unnecessary data duplication
     public function fetchAll() {
         $query = "
-        SELECT p.id AS productId, p.name AS productName, p.inStock, p.category, 
+        SELECT p.id AS productId, p.name AS productName, p.inStock, p.description, p.category, 
                 p.brand, a.id AS attributeId, a.name AS attributeName, a.type, i.id AS itemId, 
                 i.value, i.displayValue
         FROM product AS p
@@ -82,7 +82,7 @@ class ProductRepository {
 
     //Get product by id joined with attributes and items (or options)
     public function fetchById($id) {
-        $query = "SELECT p.id AS productId, p.name AS productName, p.inStock, p.category, 
+        $query = "SELECT p.id AS productId, p.name AS productName, p.inStock, p.description, p.category, 
                 p.brand, a.id AS attributeId, a.name AS attributeName, a.type, i.id AS itemId, 
                 i.value, i.displayValue
         FROM product AS p
@@ -103,7 +103,7 @@ class ProductRepository {
 
     //Get products by category
     public function fetchByCategory($category) {
-        $query = "SELECT p.id AS productId, p.name AS productName, p.inStock, p.category, 
+        $query = "SELECT p.id AS productId, p.name AS productName, p.inStock, p.description, p.category, 
                 p.brand, a.id AS attributeId, a.name AS attributeName, a.type, i.id AS itemId, 
                 i.value, i.displayValue
         FROM product AS p

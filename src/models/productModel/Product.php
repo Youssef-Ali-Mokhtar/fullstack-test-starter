@@ -10,6 +10,7 @@ abstract class Product implements ModelInterface {
     protected $brand;
     protected $category;
     protected $gallery;
+    protected $description;
     protected $attributes;
 
     public function __construct($data) {
@@ -19,6 +20,7 @@ abstract class Product implements ModelInterface {
         $this->brand = $data['brand'];
         $this->category = $data['category'];
         $this->gallery = $data['gallery'];
+        $this->description = $data['description'];
         $this->attributes = [];
     }
 
@@ -33,6 +35,7 @@ abstract class Product implements ModelInterface {
             'brand' => $this->brand,
             'category' => $this->category,
             'gallery' => $this->gallery,
+            'description' => $this->description,
             'attributes' => $this->attributes
         ];
     }
