@@ -1,8 +1,9 @@
 <?php
 
     namespace MyApp\models\categoryModel;
+    use MyApp\models\ModelInterface;
 
-    class Category {
+    class Category implements ModelInterface {
         private $name;
 
         public function __construct($data) {
