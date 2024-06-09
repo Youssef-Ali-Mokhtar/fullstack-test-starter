@@ -14,18 +14,37 @@ class ProductRepository {
     //Fetch all products joined with attributes and items (or options)
     //But without gallery, because it would cause a lot of unnecessary data duplication
     public function fetchAll() {
-        $query = "
-        SELECT p.id AS productId, p.name AS productName, p.inStock, p.description, p.category, 
-                p.brand, a.id AS attributeId, a.name AS attributeName, a.type, i.id AS itemId, 
-                i.value, i.displayValue
-        FROM product AS p
-        LEFT JOIN product_attribute_item AS pai 
-        ON p.id = pai.productId 
-        LEFT JOIN attribute AS a 
-        ON pai.attributeId = a.id 
-        LEFT JOIN item AS i
-        ON pai.itemId = i.id
-        ORDER BY p.category, p.id
+        $query = "SELECT 
+        p.id AS productId, 
+        p.name AS productName,
+        p.inStock, 
+        p.description, 
+        p.category, 
+        p.brand, 
+        a.id AS attributeId, 
+        a.name AS attributeName,
+        a.type, 
+        i.id AS itemId, 
+        i.value, 
+        i.displayValue,
+        price.id AS priceId,
+        price.amount, 
+        c.label AS currencyLabel, 
+        c.symbol AS currencySymbol
+    FROM 
+        product AS p
+    LEFT JOIN 
+        product_attribute_item AS pai ON p.id = pai.productId
+    LEFT JOIN 
+        attribute AS a ON pai.attributeId = a.id
+    LEFT JOIN 
+        item AS i ON pai.itemId = i.id
+    LEFT JOIN 
+        price ON p.id = price.product_id
+    LEFT JOIN 
+        currency AS c ON c.label = price.currency_id
+    ORDER BY 
+        p.category, p.id;
         ";
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
@@ -82,16 +101,35 @@ class ProductRepository {
 
     //Get product by id joined with attributes and items (or options)
     public function fetchById($id) {
-        $query = "SELECT p.id AS productId, p.name AS productName, p.inStock, p.description, p.category, 
-                p.brand, a.id AS attributeId, a.name AS attributeName, a.type, i.id AS itemId, 
-                i.value, i.displayValue
-        FROM product AS p
-        LEFT JOIN product_attribute_item AS pai 
-        ON p.id = pai.productId 
-        LEFT JOIN attribute AS a 
-        ON pai.attributeId = a.id 
-        LEFT JOIN item AS i 
-        ON pai.itemId = i.id
+        $query = "SELECT 
+        p.id AS productId, 
+        p.name AS productName,
+        p.inStock, 
+        p.description, 
+        p.category, 
+        p.brand, 
+        a.id AS attributeId, 
+        a.name AS attributeName,
+        a.type, 
+        i.id AS itemId, 
+        i.value, 
+        i.displayValue,
+        price.id AS priceId,
+        price.amount, 
+        c.label AS currencyLabel, 
+        c.symbol AS currencySymbol
+    FROM 
+        product AS p
+    LEFT JOIN 
+        product_attribute_item AS pai ON p.id = pai.productId
+    LEFT JOIN 
+        attribute AS a ON pai.attributeId = a.id
+    LEFT JOIN 
+        item AS i ON pai.itemId = i.id
+    LEFT JOIN 
+        price ON p.id = price.product_id
+    LEFT JOIN 
+        currency AS c ON c.label = price.currency_id
         WHERE p.id = :id
         ";
         $stmt = $this->conn->prepare($query);
@@ -103,16 +141,35 @@ class ProductRepository {
 
     //Get products by category
     public function fetchByCategory($category) {
-        $query = "SELECT p.id AS productId, p.name AS productName, p.inStock, p.description, p.category, 
-                p.brand, a.id AS attributeId, a.name AS attributeName, a.type, i.id AS itemId, 
-                i.value, i.displayValue
-        FROM product AS p
-        LEFT JOIN product_attribute_item AS pai 
-        ON p.id = pai.productId 
-        LEFT JOIN attribute AS a 
-        ON pai.attributeId = a.id 
-        LEFT JOIN item AS i
-        ON pai.itemId = i.id
+        $query = "SELECT 
+        p.id AS productId, 
+        p.name AS productName,
+        p.inStock, 
+        p.description, 
+        p.category, 
+        p.brand, 
+        a.id AS attributeId, 
+        a.name AS attributeName,
+        a.type, 
+        i.id AS itemId,
+        i.value, 
+        i.displayValue,
+        price.id AS priceId,
+        price.amount, 
+        c.label AS currencyLabel, 
+        c.symbol AS currencySymbol
+    FROM 
+        product AS p
+    LEFT JOIN 
+        product_attribute_item AS pai ON p.id = pai.productId
+    LEFT JOIN 
+        attribute AS a ON pai.attributeId = a.id
+    LEFT JOIN 
+        item AS i ON pai.itemId = i.id
+    LEFT JOIN 
+        price ON p.id = price.product_id
+    LEFT JOIN 
+        currency AS c ON c.label = price.currency_id
         WHERE category = :category
         ORDER BY p.category, p.id
         ";

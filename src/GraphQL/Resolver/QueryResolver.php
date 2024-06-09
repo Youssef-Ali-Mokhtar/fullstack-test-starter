@@ -73,8 +73,10 @@ class QueryResolver {
         if ($category) {
             return self::$productService->getProductsByCategory($category, $galleryLimit);
         }
-    
-        return self::$productService->getAllProducts($galleryLimit);
+        
+        $products = self::$productService->getAllProducts($galleryLimit);
+
+        return $products;
     }
 
     public static function getProductById($rootValue, $args, $context, $info) {

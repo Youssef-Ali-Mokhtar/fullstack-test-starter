@@ -12,6 +12,7 @@ abstract class Product implements ModelInterface {
     protected $gallery;
     protected $description;
     protected $attributes;
+    protected $prices;
 
     public function __construct($data) {
         $this->id = $data['id'];
@@ -21,13 +22,13 @@ abstract class Product implements ModelInterface {
         $this->category = $data['category'];
         $this->gallery = $data['gallery'];
         $this->description = $data['description'];
+        $this->prices = $data['prices'];
         $this->attributes = [];
     }
 
     abstract protected function setAttributesSet(array $attributesData);
 
     public function getDetails() {
-
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -36,7 +37,8 @@ abstract class Product implements ModelInterface {
             'category' => $this->category,
             'gallery' => $this->gallery,
             'description' => $this->description,
-            'attributes' => $this->attributes
+            'attributes' => $this->attributes,
+            'prices' => $this->prices
         ];
     }
 }

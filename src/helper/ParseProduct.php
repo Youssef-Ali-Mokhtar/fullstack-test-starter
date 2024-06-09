@@ -28,35 +28,60 @@
                 'brand' => $data[0]['brand'],
             ];
 
+            $prices = [];
+
+            foreach($data as $item) {
+                $priceId = $item['priceId'];
+                $prices[$priceId] = [
+                    'amount'=> round($item['amount'], 2),
+                    'currency'=> [
+                        'label'=>$item['currencyLabel'],
+                        'symbol'=>$item['currencySymbol']
+                    ]
+                    ];
+            }
+
+            $product['prices'] = array_values($prices);
+
             return $product;
         }
 
         static function extractAttributes($data) {
             $attributes = [];
-
-            
-            if(!$data[0]['attributeId']) return $attributes;
-            
+        
+            if (empty($data) || !isset($data[0]['attributeId'])) {
+                return $attributes;
+            }
+        
             foreach ($data as $item) {
                 $attributeId = $item['attributeId'];
+                $itemId = $item['itemId'];
                 
                 if (!isset($attributes[$attributeId])) {
                     $attributes[$attributeId] = [
-                        'id' => $item['attributeId'],
+                        'id' => $attributeId,
                         'name' => $item['attributeName'],
                         'type' => $item['type'],
+                        'items' => []
                     ];
                 }
-                $attributes[$attributeId]['items'][] = [
-                    'id' => $item['itemId'],
-                    'value' => $item['value'],
-                    'displayValue' => $item['displayValue']
-                ];
+        
+                // Add the item to the attribute if it doesn't already exist
+                if (!isset($attributes[$attributeId]['items'][$itemId])) {
+                    $attributes[$attributeId]['items'][$itemId] = [
+                        'id' => $itemId,
+                        'value' => $item['value'],
+                        'displayValue' => $item['displayValue']
+                    ];
+                }
             }
-    
-            $attributes = array_values($attributes);
-
-            return $attributes;
+            
+            // Convert items associative array to indexed array
+            foreach ($attributes as &$attribute) {
+                $attribute['items'] = array_values($attribute['items']);
+            }
+        
+            return array_values($attributes);
         }
         
     }
