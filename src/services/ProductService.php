@@ -23,6 +23,7 @@ class ProductService {
 
         $products = $this->transformProducts($productsData, $galleryLimit);
 
+        // echo json_encode($products[0]['prices']);
         return $products;
     }
 

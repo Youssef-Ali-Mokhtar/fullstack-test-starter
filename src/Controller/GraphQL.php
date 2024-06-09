@@ -55,32 +55,4 @@ class GraphQL {
         return json_encode($output);
     }
 
-
-    
-    public static function getCategories() {
-        
-        return self::$categoryService->getCategories();
-    }
-
-
-    public static function getProducts($rootValue, $args) {
-        $category = $args['category'] ?? null;
-        $galleryLimit = $args['galleryLimit'] ?? null;
-        
-        if ($category) {
-            return self::$productService->getProductsByCategory($category, $galleryLimit);
-        }
-    
-        return self::$productService->getAllProducts($galleryLimit);
-    }
-
-
-    public static function getProductById($rootValue, $args, $context, $info) {
-        $id = $args['id'] ?? null;
-        $galleryLimit = $args['galleryLimit'] ?? null;
-
-        return self::$productService->getProductById($id, $galleryLimit);
-    }
-
-
 }
