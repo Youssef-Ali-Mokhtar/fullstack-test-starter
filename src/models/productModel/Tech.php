@@ -32,6 +32,3 @@ class Tech extends Product {
 
     }
 }
-
-
-?>

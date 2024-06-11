@@ -22,4 +22,3 @@ class Capacity extends Attribute {
 
 }
 
-?>

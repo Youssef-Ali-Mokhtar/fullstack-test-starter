@@ -30,4 +30,4 @@ class ProductFactory {
         return $product;
     }
 }
-?>
+

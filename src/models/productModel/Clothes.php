@@ -29,4 +29,3 @@ class Clothes extends Product {
 
     }
 }
-?>

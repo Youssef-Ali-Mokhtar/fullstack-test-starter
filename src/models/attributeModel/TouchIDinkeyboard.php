@@ -21,5 +21,3 @@ class TouchIDinkeyboard extends Attribute {
     }
 
 }
-
-?>

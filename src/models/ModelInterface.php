@@ -4,4 +4,3 @@
     interface ModelInterface {
         function getDetails();
     }
-?>

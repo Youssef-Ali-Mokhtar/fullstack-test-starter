@@ -21,5 +21,3 @@ class Size extends Attribute {
     }
 
 }
-
-?>

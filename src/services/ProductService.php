@@ -100,6 +100,4 @@ class ProductService {
         return $products;
     }
 
-
 }
-?>
