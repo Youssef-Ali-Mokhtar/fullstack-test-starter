@@ -21,6 +21,3 @@ class WithUSB3ports extends Attribute {
     }
 
 }
-
-?>
-

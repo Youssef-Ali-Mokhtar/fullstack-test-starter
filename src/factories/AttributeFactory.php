@@ -23,4 +23,4 @@ class AttributeFactory {
         return $attribute;
     }
 }
-?>
+

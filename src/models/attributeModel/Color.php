@@ -22,4 +22,3 @@ class Color extends Attribute {
 
 }
 
-?>
