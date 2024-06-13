@@ -202,5 +202,22 @@ class ProductRepository {
             return [];
         }
     }
+
+    public function checkProducts($productIds) {
+        
+        try {
+            $placeholders = implode(',', array_fill(0, count($productIds), '?'));
+            $query = "SELECT id FROM product WHERE id IN ($placeholders)";
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute($productIds);
+            $result = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+            return $result;
+        } catch (PDOException $e) {
+            // Log error and handle exception
+            error_log($e->getMessage());
+            return [];
+        }
+    }
+
 }
 

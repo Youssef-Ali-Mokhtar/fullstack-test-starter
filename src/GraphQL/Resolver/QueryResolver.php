@@ -11,8 +11,10 @@ use MyApp\GraphQL\Type\CategoryType;
 use MyApp\database\Database;
 use MyApp\repositories\ProductRepository;
 use MyApp\repositories\CategoryRepository;
+use MyApp\repositories\OrderRepository;
 use MyApp\services\ProductService;
 use MyApp\services\CategoryService;
+use MyApp\services\OrderService;
 
 class QueryResolver {
 
@@ -20,8 +22,10 @@ class QueryResolver {
     private static $db;
     private static $categoryRepository;
     private static $productRepository;
+    private static $orderRepository;
     private static $categoryService;
     private static $productService;
+    private static $orderService;
 
     public static function create() {
 
@@ -30,9 +34,11 @@ class QueryResolver {
 
         self::$productRepository = new ProductRepository(self::$db);
         self::$categoryRepository = new CategoryRepository(self::$db);
+        self::$orderRepository = new OrderRepository(self::$db);
 
         self::$productService = new ProductService(self::$productRepository);
         self::$categoryService = new CategoryService(self::$categoryRepository);
+        self::$orderService = new OrderService(self::$productRepository, self::$orderRepository);
 
         return new ObjectType([
             'name' => 'Query',
@@ -56,6 +62,10 @@ class QueryResolver {
                         'galleryLimit' => Type::int(),
                     ],
                     'resolve' => [self::class, 'getProductById'],
+                ],
+                'order' => [
+                    'type' => Type::string(),
+                    'resolve' => [self::class, 'getOrder'],
                 ],
             ]
         ]);
@@ -84,5 +94,56 @@ class QueryResolver {
         $galleryLimit = $args['galleryLimit'] ?? null;
 
         return self::$productService->getProductById($id, $galleryLimit);
+    }
+
+    public static function getOrder($rootValue, $args, $context, $info) {
+
+        $jsonString = '
+        {
+            "totalQuantity": 4,
+            "totalAmount": 952.54,
+            "currencyLabel": "USD",
+            "orderId": "X3m0agVis",
+            "products": [
+                {
+                    "orderDetailId": "huarache-x-stussy-le_41_ZhpC5ndt0z",
+                    "productId": "huarache-x-stussy-le",
+                    "quantity": 2,
+                    "attributes": [
+                        {
+                            "attributeId": "Size",
+                            "itemId": "41"
+                        }
+                    ]
+                },
+                {
+                    "orderDetailId": "jacket-canada-goosee_Large_lpZ08qRsWg",
+                    "productId": "jacket-canada-goosee",
+                    "quantity": 1,
+                    "attributes": [
+                        {
+                            "attributeId": "Size",
+                            "itemId": "Large"
+                        }
+                    ]
+                },
+                {
+                    "orderDetailId": "huarache-x-stussy-le_43_UjExIXgiif",
+                    "productId": "huarache-x-stussy-le",
+                    "quantity": 1,
+                    "attributes": [
+                        {
+                            "attributeId": "Size",
+                            "itemId": "43"
+                        }
+                    ]
+                }
+            ]
+        }';
+        
+        $orderData = json_decode($jsonString, true);
+        
+        self::$orderService->addOrder($orderData);
+        return "Hey";
     }
 }
