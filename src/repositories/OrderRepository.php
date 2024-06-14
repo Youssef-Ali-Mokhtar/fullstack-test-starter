@@ -36,11 +36,11 @@ class OrderRepository {
 
             // Loop through each product and append values to the query
             foreach ($data['products'] as $product) {
-                $orderDetailValues[] = "('{$product['orderDetailId']}', {$product['quantity']}, '{$data['id']}', '{$product['productId']}')";
+                $orderDetailValues[] = "('{$product['id']}', {$product['quantity']}, '{$data['id']}', '{$product['productId']}')";
                 
                 // Loop through each attribute and append values to the query
                 foreach ($product['attributes'] as $attribute) {
-                    $orderDetailAttributesValues[] = "('{$attribute['attributeId']}', '{$attribute['itemId']}', '{$product['orderDetailId']}')";
+                    $orderDetailAttributesValues[] = "('{$attribute['attributeId']}', '{$attribute['itemId']}', '{$product['id']}')";
                 }
             }
 

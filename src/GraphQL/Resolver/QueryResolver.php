@@ -5,8 +5,8 @@ namespace MyApp\GraphQL\Resolver;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 
-use MyApp\GraphQL\Type\ProductType;
-use MyApp\GraphQL\Type\CategoryType;
+use MyApp\GraphQL\Type\QueryType\ProductType;
+use MyApp\GraphQL\Type\QueryType\CategoryType;
 
 use MyApp\database\Database;
 use MyApp\repositories\ProductRepository;
@@ -40,15 +40,23 @@ class QueryResolver {
         self::$categoryService = new CategoryService(self::$categoryRepository);
         self::$orderService = new OrderService(self::$productRepository, self::$orderRepository);
 
+        $productType = new ProductType();
+
         return new ObjectType([
             'name' => 'Query',
             'fields' => [
+                'echo' => [
+                    'type' => Type::string(),
+                    'resolve' => function() {
+                        return "Hello!!";
+                    }
+                ],
                 'categories' => [
                     'type' => Type::listOf(new CategoryType()),
                     'resolve' => [self::class, 'getCategories'],
                 ],
                 'products' => [
-                    'type' => Type::listOf(new ProductType()),
+                    'type' => Type::listOf($productType),
                     'args' => [
                         'category' => Type::string(),
                         'galleryLimit' => Type::int(),
@@ -56,16 +64,12 @@ class QueryResolver {
                     'resolve' => [self::class, 'getProducts'],
                 ],
                 'product' => [
-                    'type' => new ProductType(),
+                    'type' => $productType,
                     'args' => [
                         'id' => Type::nonNull(Type::id()),
                         'galleryLimit' => Type::int(),
                     ],
                     'resolve' => [self::class, 'getProductById'],
-                ],
-                'order' => [
-                    'type' => Type::string(),
-                    'resolve' => [self::class, 'getOrder'],
                 ],
             ]
         ]);
@@ -94,56 +98,5 @@ class QueryResolver {
         $galleryLimit = $args['galleryLimit'] ?? null;
 
         return self::$productService->getProductById($id, $galleryLimit);
-    }
-
-    public static function getOrder($rootValue, $args, $context, $info) {
-
-        $jsonString = '
-        {
-            "totalQuantity": 4,
-            "totalAmount": 952.54,
-            "currencyLabel": "USD",
-            "orderId": "X3m0agVis",
-            "products": [
-                {
-                    "orderDetailId": "huarache-x-stussy-le_41_ZhpC5ndt0z",
-                    "productId": "huarache-x-stussy-le",
-                    "quantity": 2,
-                    "attributes": [
-                        {
-                            "attributeId": "Size",
-                            "itemId": "41"
-                        }
-                    ]
-                },
-                {
-                    "orderDetailId": "jacket-canada-goosee_Large_lpZ08qRsWg",
-                    "productId": "jacket-canada-goosee",
-                    "quantity": 1,
-                    "attributes": [
-                        {
-                            "attributeId": "Size",
-                            "itemId": "Large"
-                        }
-                    ]
-                },
-                {
-                    "orderDetailId": "huarache-x-stussy-le_43_UjExIXgiif",
-                    "productId": "huarache-x-stussy-le",
-                    "quantity": 1,
-                    "attributes": [
-                        {
-                            "attributeId": "Size",
-                            "itemId": "43"
-                        }
-                    ]
-                }
-            ]
-        }';
-        
-        $orderData = json_decode($jsonString, true);
-        
-        self::$orderService->addOrder($orderData);
-        return "Hey";
     }
 }
