@@ -11,7 +11,7 @@ class Order implements ModelInterface {
     private $products;
 
     public function __construct($data) {
-        $this->id = $data['orderId'];
+        $this->id = $data['id'];
         $this->totalQuantity = $data['totalQuantity'];
         $this->totalAmount = $data['totalAmount'];
         $this->currencyLabel = $data['currencyLabel'];
@@ -59,7 +59,7 @@ class Order implements ModelInterface {
         }
         foreach ($products as $product) {
             $this->validateId($product['productId']);
-            $this->validateId($product['orderDetailId']);
+            $this->validateId($product['id']);
             $this->validateTotalQuantity($product['quantity']);
 
             if (!is_array($product['attributes'])) {

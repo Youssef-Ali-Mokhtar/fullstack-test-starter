@@ -21,7 +21,7 @@
             
             $this->checkOrderProducts($order); // Validate if each product exists in the database
 
-            echo $this->orderRepository->addOrder($order->getDetails());
+            return $this->orderRepository->addOrder($order->getDetails());
         }
 
         private function checkOrderProducts($order) {
