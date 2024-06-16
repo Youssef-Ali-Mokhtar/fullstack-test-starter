@@ -6,7 +6,7 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\InputObjectType;
 use GraphQL\Type\Definition\Type;
 
-use MyApp\GraphQL\Type\InputType\OrderInput;
+use MyApp\GraphQL\Type\Types;
 use MyApp\database\Database;
 use MyApp\services\OrderService;
 use MyApp\repositories\ProductRepository;
@@ -36,7 +36,7 @@ class MutationResolver {
                 'addOrder' => [
                     'type' => Type::string(),
                     'args' => [
-                        'order' => new OrderInput(),
+                        'order' => Types::orderInput(),
                     ],
                     'resolve' => [self::class, 'addOrder']
                 ],

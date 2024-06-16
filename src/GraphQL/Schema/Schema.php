@@ -9,10 +9,8 @@ use MyApp\GraphQL\Resolver\MutationResolver;
 
 class Schema {
     public static function create() {
-        // Define the Query type
-        $queryType = QueryResolver::create();
 
-        // Define the Mutation type
+        $queryType = QueryResolver::create();
         $mutationType = MutationResolver::create();
 
         // Define the schema with Query and Mutation types
