@@ -5,8 +5,7 @@ namespace MyApp\GraphQL\Resolver;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 
-use MyApp\GraphQL\Type\QueryType\ProductType;
-use MyApp\GraphQL\Type\QueryType\CategoryType;
+use MyApp\GraphQL\Type\Types;
 
 use MyApp\database\Database;
 use MyApp\repositories\ProductRepository;
@@ -15,6 +14,7 @@ use MyApp\repositories\OrderRepository;
 use MyApp\services\ProductService;
 use MyApp\services\CategoryService;
 use MyApp\services\OrderService;
+
 
 class QueryResolver {
 
@@ -34,29 +34,19 @@ class QueryResolver {
 
         self::$productRepository = new ProductRepository(self::$db);
         self::$categoryRepository = new CategoryRepository(self::$db);
-        self::$orderRepository = new OrderRepository(self::$db);
 
         self::$productService = new ProductService(self::$productRepository);
         self::$categoryService = new CategoryService(self::$categoryRepository);
-        self::$orderService = new OrderService(self::$productRepository, self::$orderRepository);
-
-        $productType = new ProductType();
 
         return new ObjectType([
             'name' => 'Query',
             'fields' => [
-                'echo' => [
-                    'type' => Type::string(),
-                    'resolve' => function() {
-                        return "Hello!!";
-                    }
-                ],
                 'categories' => [
-                    'type' => Type::listOf(new CategoryType()),
+                    'type' => Type::listOf(Types::category()),
                     'resolve' => [self::class, 'getCategories'],
                 ],
                 'products' => [
-                    'type' => Type::listOf($productType),
+                    'type' => Type::listOf(Types::product()),
                     'args' => [
                         'category' => Type::string(),
                         'galleryLimit' => Type::int(),
@@ -64,7 +54,7 @@ class QueryResolver {
                     'resolve' => [self::class, 'getProducts'],
                 ],
                 'product' => [
-                    'type' => $productType,
+                    'type' => Types::product(),
                     'args' => [
                         'id' => Type::nonNull(Type::id()),
                         'galleryLimit' => Type::int(),

@@ -28,10 +28,10 @@ class OrderRepository {
                 ':currencyLabel' => $data['currencyLabel']
             ]);
 
-            // Prepare orderDetail and orderDetailAttributes SQL
+            // Prepare orderDetail and orderDetailAttribute SQL
             $orderDetailSQL = "INSERT INTO orderDetail (id, quantity, orderId, productId) VALUES ";
             $orderDetailValues = [];
-            $orderDetailAttributesSQL = "INSERT INTO orderDetailAttributes (attributeId, itemId, orderDetailId) VALUES ";
+            $orderDetailAttributesSQL = "INSERT INTO orderDetailAttribute (attributeId, itemId, orderDetailId) VALUES ";
             $orderDetailAttributesValues = [];
 
             // Loop through each product and append values to the query

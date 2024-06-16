@@ -36,7 +36,7 @@ class ProductRepository {
             FROM 
                 product AS p
             LEFT JOIN 
-                product_attribute_item AS pai ON p.id = pai.productId
+                productAttributeItem AS pai ON p.id = pai.productId
             LEFT JOIN 
                 attribute AS a ON pai.attributeId = a.id
             LEFT JOIN 
@@ -132,7 +132,7 @@ class ProductRepository {
             FROM 
                 product AS p
             LEFT JOIN 
-                product_attribute_item AS pai ON p.id = pai.productId
+                productAttributeItem AS pai ON p.id = pai.productId
             LEFT JOIN 
                 attribute AS a ON pai.attributeId = a.id
             LEFT JOIN 
@@ -178,7 +178,7 @@ class ProductRepository {
             FROM 
                 product AS p
             LEFT JOIN 
-                product_attribute_item AS pai ON p.id = pai.productId
+                productAttributeItem AS pai ON p.id = pai.productId
             LEFT JOIN 
                 attribute AS a ON pai.attributeId = a.id
             LEFT JOIN 
