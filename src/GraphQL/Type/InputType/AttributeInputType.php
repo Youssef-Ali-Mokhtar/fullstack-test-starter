@@ -5,7 +5,7 @@ namespace MyApp\GraphQL\Type\InputType;
 use GraphQL\Type\Definition\InputObjectType;
 use GraphQL\Type\Definition\Type;
 
-class AttributeInput extends InputObjectType {
+class AttributeInputType extends InputObjectType {
     public function __construct() {
         parent::__construct([
             'name' => 'AttributeInput',

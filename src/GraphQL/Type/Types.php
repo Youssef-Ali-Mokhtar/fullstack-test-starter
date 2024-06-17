@@ -4,7 +4,7 @@ namespace MyApp\GraphQL\Type;
 
 use MyApp\GraphQL\Type\QueryType\ProductType;
 use MyApp\GraphQL\Type\QueryType\CategoryType;
-use MyApp\GraphQL\Type\InputType\OrderInput;
+use MyApp\GraphQL\Type\InputType\OrderInputType;
 
 
 //To make sure types are instantiated only once inside QueryResolver and MutationResolver
@@ -12,7 +12,7 @@ use MyApp\GraphQL\Type\InputType\OrderInput;
 class Types {
     private static $productType;
     private static $categoryType;
-    private static $orderInput;
+    private static $orderInputType;
 
     public static function product() {
         return self::$productType ?: (self::$productType = new ProductType());
@@ -23,7 +23,7 @@ class Types {
     }
 
     public static function orderInput() {
-        return self::$orderInput ?: (self::$orderInput = new OrderInput());
+        return self::$orderInputType ?: (self::$orderInputType = new OrderInputType());
     }
 
 
