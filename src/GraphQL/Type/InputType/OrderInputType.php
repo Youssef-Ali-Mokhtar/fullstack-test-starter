@@ -5,9 +5,9 @@ namespace MyApp\GraphQL\Type\InputType;
 use GraphQL\Type\Definition\InputObjectType;
 use GraphQL\Type\Definition\Type;
 
-use MyApp\GraphQL\Type\InputType\ProductInput;
+use MyApp\GraphQL\Type\InputType\ProductInputType;
 
-class OrderInput extends InputObjectType {
+class OrderInputType extends InputObjectType {
     public function __construct() {
         parent::__construct([
             'name' => 'OrderInput',
@@ -16,7 +16,7 @@ class OrderInput extends InputObjectType {
                 'totalQuantity' => Type::nonNull(Type::int()),
                 'totalAmount' => Type::nonNull(Type::float()),
                 'currencyLabel' => Type::nonNull(Type::string()),
-                'products' => Type::listOf(new ProductInput())
+                'products' => Type::listOf(new ProductInputType())
             ]
         ]);
     }
