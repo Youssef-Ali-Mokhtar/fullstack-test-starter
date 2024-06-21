@@ -5,7 +5,7 @@ require_once __DIR__ . '/../config/Config.php';
 
 
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
-    $r->post('/graphql', [MyApp\Controller\GraphQL::class, 'handle']);
+    $r->post('/graphql', [MyApp\controller\GraphQL::class, 'handle']);
 });
 
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace MyApp\GraphQL\Resolver;
+namespace MyApp\graphQl\resolver;
 
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
-use MyApp\GraphQL\Type\Types;
-use MyApp\GraphQL\ServiceContainer;
-use MyApp\GraphQL\Resolver\Query\CategoryResolver;
-use MyApp\GraphQL\Resolver\Query\ProductResolver;
+use MyApp\graphQl\type\Types;
+use MyApp\graphQl\ServiceContainer;
+use MyApp\graphQl\resolver\query\CategoryResolver;
+use MyApp\graphQl\resolver\query\ProductResolver;
 
 class QueryResolver {
     public static function create(ServiceContainer $serviceContainer) {

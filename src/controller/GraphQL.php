@@ -1,13 +1,7 @@
 <?php
 
 
-namespace MyApp\Controller;
-
-use MyApp\database\Database;
-use MyApp\repositories\ProductRepository;
-use MyApp\repositories\CategoryRepository;
-use MyApp\services\ProductService;
-use MyApp\services\CategoryService;
+namespace MyApp\controller;
 
 use GraphQL\GraphQL as GraphQLBase;
 use GraphQL\Type\Definition\ObjectType;
@@ -16,7 +10,7 @@ use GraphQL\Type\Schema;
 use GraphQL\Type\SchemaConfig;
 use RuntimeException;
 use Throwable;
-use MyApp\GraphQL\Schema\Schema as MySchema;
+use MyApp\graphQl\schema\Schema as MySchema;
 
 class GraphQL {
 

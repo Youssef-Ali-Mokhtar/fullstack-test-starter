@@ -1,6 +1,6 @@
 <?php
 
-namespace MyApp\GraphQL\Type\InputType;
+namespace MyApp\graphQl\type\inputType;
 
 use GraphQL\Type\Definition\InputObjectType;
 use GraphQL\Type\Definition\Type;

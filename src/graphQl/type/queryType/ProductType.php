@@ -1,11 +1,11 @@
 <?php
 
-namespace MyApp\GraphQL\Type\QueryType;
+namespace MyApp\graphQl\type\queryType;
 
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
-use MyApp\GraphQL\Type\QueryType\AttributeSetType;
-use MyApp\GraphQL\Type\QueryType\PriceType;
+use MyApp\graphQl\type\queryType\AttributeSetType;
+use MyApp\graphQl\type\queryType\PriceType;
 
 class ProductType extends ObjectType {
     public function __construct() {

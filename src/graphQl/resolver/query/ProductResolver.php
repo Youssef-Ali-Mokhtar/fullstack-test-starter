@@ -1,6 +1,6 @@
 <?php
 
-namespace MyApp\GraphQL\Resolver\Query;
+namespace MyApp\graphQl\resolver\query;
 
 use MyApp\services\ProductService;
 

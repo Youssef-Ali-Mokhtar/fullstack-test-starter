@@ -1,10 +1,10 @@
 <?php
 
-namespace MyApp\GraphQL\Type\QueryType;
+namespace MyApp\graphQl\type\queryType;
 
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
-use MyApp\GraphQL\Type\QueryType\AttributeType;
+use MyApp\graphQl\type\queryType\AttributeType;
 
 class AttributeSetType extends ObjectType {
     public function __construct() {

@@ -25,7 +25,7 @@ class ProductRepository {
                 p.brand, 
                 a.id AS attributeId, 
                 a.name AS attributeName,
-                a.type, 
+                a.type,
                 i.id AS itemId, 
                 i.value, 
                 i.displayValue,
@@ -58,56 +58,6 @@ class ProductRepository {
         }
     }
     
-    // Fetch all gallery data
-    // If product ids are provided, it will fetch only gallery associated with the required products
-    // If limit is provided, it will fetch at most the given limit number for each product
-    public function fetchGallery($productIds = [], $limit = NULL) {
-        try {
-            // Base query with ROW_NUMBER() for limiting rows per productId
-            $query = "SELECT productId, url
-                FROM (
-                    SELECT productId, url, ROW_NUMBER() OVER (PARTITION BY productId ORDER BY id) AS row_num
-                    FROM gallery
-                ) AS numbered_rows";
-
-            // Add a WHERE clause if product IDs are provided
-            if (!empty($productIds)) {
-                // Create placeholders for the product IDs
-                $placeholders = implode(',', array_fill(0, count($productIds), '?'));
-                $query .= " WHERE productId IN ($placeholders)";
-            }
-
-            // Add the row_num limit if provided
-            if ($limit !== NULL) {
-                $query .= !empty($productIds) ? " AND" : " WHERE";
-                $query .= " row_num <= ?";
-            }
-
-            // Prepare the statement
-            $stmt = $this->conn->prepare($query);
-
-            // Bind values to placeholders
-            $paramIndex = 1;
-            if (!empty($productIds)) {
-                foreach ($productIds as $id) {
-                    $stmt->bindValue($paramIndex++, $id, PDO::PARAM_STR); // Assuming productId is VARCHAR
-                }
-            }
-
-            // Bind the limit value if provided
-            if ($limit !== NULL) {
-                $stmt->bindValue($paramIndex, $limit, PDO::PARAM_INT);
-            }
-
-            $stmt->execute();
-
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            // Log error and handle exception
-            error_log($e->getMessage());
-            return [];
-        }
-    }
 
     // Get product by id joined with attributes and items (or options)
     public function fetchById($id) {
@@ -202,6 +152,59 @@ class ProductRepository {
             return [];
         }
     }
+
+
+        // Fetch all gallery data
+    // If product ids are provided, it will fetch only gallery associated with the required products
+    // If limit is provided, it will fetch at most the given limit number for each product
+    public function fetchGallery($productIds = [], $limit = NULL) {
+        try {
+            // Base query with ROW_NUMBER() for limiting rows per productId
+            $query = "SELECT productId, url
+                FROM (
+                    SELECT productId, url, ROW_NUMBER() OVER (PARTITION BY productId ORDER BY id) AS row_num
+                    FROM gallery
+                ) AS numbered_rows";
+
+            // Add a WHERE clause if product IDs are provided
+            if (!empty($productIds)) {
+                // Create placeholders for the product IDs
+                $placeholders = implode(',', array_fill(0, count($productIds), '?'));
+                $query .= " WHERE productId IN ($placeholders)";
+            }
+
+            // Add the row_num limit if provided
+            if ($limit !== NULL) {
+                $query .= !empty($productIds) ? " AND" : " WHERE";
+                $query .= " row_num <= ?";
+            }
+
+            // Prepare the statement
+            $stmt = $this->conn->prepare($query);
+
+            // Bind values to placeholders
+            $paramIndex = 1;
+            if (!empty($productIds)) {
+                foreach ($productIds as $id) {
+                    $stmt->bindValue($paramIndex++, $id, PDO::PARAM_STR); // Assuming productId is VARCHAR
+                }
+            }
+
+            // Bind the limit value if provided
+            if ($limit !== NULL) {
+                $stmt->bindValue($paramIndex, $limit, PDO::PARAM_INT);
+            }
+
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // Log error and handle exception
+            error_log($e->getMessage());
+            return [];
+        }
+    }
+
 
     public function checkProducts($productIds) {
         
