@@ -10,7 +10,7 @@ use GraphQL\Type\Schema;
 use GraphQL\Type\SchemaConfig;
 use RuntimeException;
 use Throwable;
-use MyApp\graphQl\schema\Schema as MySchema;
+use MyApp\graphql\schema\Schema as MySchema;
 
 class GraphQL {
 

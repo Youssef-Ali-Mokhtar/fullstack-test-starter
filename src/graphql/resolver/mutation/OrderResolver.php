@@ -1,6 +1,6 @@
 <?php
 
-namespace MyApp\graphQl\resolver\mutation;
+namespace MyApp\graphql\resolver\mutation;
 
 use MyApp\services\OrderService;
 

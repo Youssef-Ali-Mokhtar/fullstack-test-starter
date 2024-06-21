@@ -1,12 +1,12 @@
 <?php
 
-namespace MyApp\graphQl\schema;
+namespace MyApp\graphql\schema;
 
 use GraphQL\Type\Schema as GraphQLSchema;
 use GraphQL\Type\SchemaConfig;
-use MyApp\graphQl\resolver\QueryResolver;
-use MyApp\graphQl\resolver\MutationResolver;
-use MyApp\graphQl\ServiceContainer;
+use MyApp\graphql\resolver\QueryResolver;
+use MyApp\graphql\resolver\MutationResolver;
+use MyApp\graphql\ServiceContainer;
 
 class Schema {
     public static function create() {

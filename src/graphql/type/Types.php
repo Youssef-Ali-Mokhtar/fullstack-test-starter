@@ -1,10 +1,10 @@
 <?php
 // src/GraphQL/Type/Types.php
-namespace MyApp\graphQl\type;
+namespace MyApp\graphql\type;
 
-use MyApp\graphQl\type\queryType\ProductType;
-use MyApp\graphQl\type\queryType\CategoryType;
-use MyApp\graphQl\type\inputType\OrderInputType;
+use MyApp\graphql\type\queryType\ProductType;
+use MyApp\graphql\type\queryType\CategoryType;
+use MyApp\graphql\type\inputType\OrderInputType;
 
 
 //To make sure types are instantiated only once inside QueryResolver and MutationResolver

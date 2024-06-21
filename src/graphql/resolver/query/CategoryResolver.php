@@ -1,6 +1,6 @@
 <?php
 
-namespace MyApp\graphQl\resolver\query;
+namespace MyApp\graphql\resolver\query;
 
 use MyApp\services\CategoryService;
 

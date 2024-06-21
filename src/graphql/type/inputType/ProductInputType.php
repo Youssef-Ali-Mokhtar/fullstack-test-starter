@@ -1,11 +1,11 @@
 <?php
 
-namespace MyApp\graphQl\type\inputType;
+namespace MyApp\graphql\type\inputType;
 
 use GraphQL\Type\Definition\InputObjectType;
 use GraphQL\Type\Definition\Type;
 
-use MyApp\graphQl\type\inputType\AttributeInputType;
+use MyApp\graphql\type\inputType\AttributeInputType;
 
 class ProductInputType extends InputObjectType {
     public function __construct() {

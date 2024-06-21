@@ -1,6 +1,6 @@
 <?php
 
-namespace MyApp\graphQl;
+namespace MyApp\graphql;
 
 use MyApp\database\Database;
 use MyApp\repositories\ProductRepository;

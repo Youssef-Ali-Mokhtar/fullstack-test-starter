@@ -1,10 +1,10 @@
 <?php
 
-namespace MyApp\graphQl\type\queryType;
+namespace MyApp\graphql\type\queryType;
 
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
-use MyApp\graphQl\type\queryType\CurrencyType;
+use MyApp\graphql\type\queryType\CurrencyType;
 
 class PriceType extends ObjectType {
     public function __construct() {
