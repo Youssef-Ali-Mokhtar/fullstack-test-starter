@@ -8,12 +8,22 @@ use PDOException;
 class ProductRepository {
     private $conn;
 
-    public function __construct($db) {
+    /**
+     * Constructor to initialize the repository with a database connection.
+     *
+     * @param PDO $db PDO database connection instance.
+     */
+    public function __construct(PDO $db) {
         $this->conn = $db;
     }
 
-    // Fetch all products joined with attributes and items (or options)
-    // But without gallery, because it would cause a lot of unnecessary data duplication
+    
+    /**
+     * Fetch all products joined with attributes, items, and prices.
+     * Does not include gallery data to avoid unnecessary duplication.
+     *
+     * @return array Array of product records fetched from the database.
+     */
     public function fetchAll() {
         try {
             $query = "SELECT 
@@ -59,7 +69,12 @@ class ProductRepository {
     }
     
 
-    // Get product by id joined with attributes and items (or options)
+    /**
+     * Fetch product by its ID joined with attributes, items, and prices.
+     *
+     * @param string $id Product ID to fetch.
+     * @return array Array containing product details fetched from the database.
+     */
     public function fetchById($id) {
         try {
             $query = "SELECT 
@@ -105,7 +120,13 @@ class ProductRepository {
         }
     }
 
-    // Get products by category
+
+    /**
+     * Fetch products by their category joined with attributes, items, and prices.
+     *
+     * @param string $category Product category to filter by.
+     * @return array Array of product records filtered by category.
+     */
     public function fetchByCategory($category) {
         try {
             $query = "SELECT 
@@ -138,7 +159,7 @@ class ProductRepository {
             LEFT JOIN 
                 currency AS c ON c.label = price.currency_id
             WHERE 
-                category = :category
+                p.category = :category
             ORDER BY 
                 p.category, p.id";
             
@@ -154,9 +175,15 @@ class ProductRepository {
     }
 
 
-        // Fetch all gallery data
-    // If product ids are provided, it will fetch only gallery associated with the required products
-    // If limit is provided, it will fetch at most the given limit number for each product
+    /**
+     * Fetches gallery data for products.
+     * If product IDs are provided, fetches gallery only for those products.
+     * If limit is provided, limits the number of gallery items fetched per product.
+     *
+     * @param array $productIds Optional array of product IDs to filter by.
+     * @param int|null $limit Optional limit on the number of gallery items per product.
+     * @return array Array of gallery data fetched from the database.
+     */
     public function fetchGallery($productIds = [], $limit = NULL) {
         try {
             // Base query with ROW_NUMBER() for limiting rows per productId
@@ -206,8 +233,13 @@ class ProductRepository {
     }
 
 
+    /**
+     * Checks if the provided product IDs exist in the database.
+     *
+     * @param array $productIds Array of product IDs to check.
+     * @return array Array of existing product IDs found in the database.
+     */
     public function checkProducts($productIds) {
-        
         try {
             $placeholders = implode(',', array_fill(0, count($productIds), '?'));
             $query = "SELECT id FROM product WHERE id IN ($placeholders)";
@@ -223,4 +255,3 @@ class ProductRepository {
     }
 
 }
-

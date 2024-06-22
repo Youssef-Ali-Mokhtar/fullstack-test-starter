@@ -3,6 +3,11 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config/Config.php';
 
+use Dotenv\Dotenv;
+
+// Load environment variables from .env file
+$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
 
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->post('/graphql', [MyApp\controller\GraphQL::class, 'handle']);

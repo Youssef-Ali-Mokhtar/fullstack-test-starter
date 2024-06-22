@@ -10,6 +10,10 @@ use MyApp\services\ProductService;
 use MyApp\services\CategoryService;
 use MyApp\services\OrderService;
 
+/**
+ * ServiceContainer class manages and provides access to GraphQL-related services.
+ */
+
 class ServiceContainer {
     private $db;
     private $productRepository;

@@ -1,21 +1,32 @@
 <?php
 
-    namespace MyApp\repositories;
+namespace MyApp\repositories;
 
-    use PDO;
+use PDO;
 
-    class CategoryRepository {
-        private $conn;
+class CategoryRepository {
+    private $conn;
 
-        public function __construct($db) {
-            $this->conn = $db;
-        }
-
-        public function fetchCategories() {
-            $query = "SELECT * FROM category";
-            $stmt = $this->conn->prepare($query);
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }
-
+    /**
+     * Constructor to initialize the repository with a database connection.
+     *
+     * @param PDO $db PDO database connection instance.
+     */
+    public function __construct(PDO $db) {
+        $this->conn = $db;
     }
+
+    /**
+     * Fetches all categories from the database.
+     *
+     * @return array Array of category records fetched from the database.
+     */
+    public function fetchCategories() {
+        $query = "SELECT * FROM category";
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+}
+

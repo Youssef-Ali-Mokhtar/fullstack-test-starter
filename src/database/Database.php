@@ -6,12 +6,19 @@ use PDO;
 use PDOExeption;
 
 class Database {
-    private $host = 'localhost';
-    private $db_name = 'scandiweb_test';
-    private $username = 'root';
-    private $password = '';
+    private $host;
+    private $db_name;
+    private $username;
+    private $password;
     private $conn;
 
+    public function __construct() {
+        $this->host = $_ENV['DB_HOST'];
+        $this->db_name = $_ENV['DB_DATABASE'];
+        $this->username = $_ENV['DB_USERNAME'];
+        $this->password = $_ENV['DB_PASSWORD'];
+    }
+    
     public function connect() {
         $this->conn = null;
 

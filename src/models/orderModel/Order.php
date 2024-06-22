@@ -16,10 +16,12 @@ class Order implements ModelInterface {
         $this->totalAmount = $data['totalAmount'];
         $this->currencyLabel = $data['currencyLabel'];
         $this->products = $data['products'];
+
+        $this->validateData();
     }
 
 
-    public function validate() {
+    public function validateData() {
         $this->validateId($this->id);
         $this->validateTotalQuantity($this->totalQuantity);
         $this->validateTotalAmount($this->totalAmount);

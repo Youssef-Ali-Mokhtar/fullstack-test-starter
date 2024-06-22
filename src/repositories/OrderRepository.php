@@ -8,10 +8,21 @@ use PDOException;
 class OrderRepository {
     private $conn;
 
-    public function __construct($db) {
+    /**
+     * Constructor to initialize the repository with a database connection.
+     *
+     * @param PDO $db PDO database connection instance.
+     */
+    public function __construct(PDO $db) {
         $this->conn = $db;
     }
 
+    /**
+     * Adds an order and its details to the database using transactional processing.
+     *
+     * @param array $data Array containing order data including products and their attributes.
+     * @return string Success message or error message if operation fails.
+     */
     public function addOrder($data) {
         try {
             // Begin the transaction
@@ -44,7 +55,7 @@ class OrderRepository {
                 }
             }
 
-            // Append the concatenated values to the base SQL
+            // Append the concatenated values to the base SQL and execute
             if (!empty($orderDetailValues)) {
                 $orderDetailSQL .= implode(", ", $orderDetailValues);
                 $this->conn->exec($orderDetailSQL);
@@ -67,3 +78,4 @@ class OrderRepository {
         }
     }
 }
+
